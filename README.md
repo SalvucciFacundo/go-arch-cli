@@ -52,6 +52,12 @@ go-arch generate repository User
 - **Standard**: Conventional Go layout for mid-sized projects and CLI tools.
 - **Hexagonal**: Domain-Centric design for enterprise-grade applications requiring high decoupling from external infrastructure.
 
+## 📚 Documentation
+
+For deep technical insights and usage guides, please refer to:
+- [**Architecture Guide**](./docs/ARCHITECTURE.md): Detailed explanation oflayouts and internal design patterns.
+- [**Command Reference**](./docs/COMMANDS.md): Comprehensive guide on how to use every CLI command with examples.
+
 ## 🤝 Contributing
 
 Contributions are what make the open-source community an amazing place to learn, inspire, and create. Any contributions you make are **greatly appreciated**.
