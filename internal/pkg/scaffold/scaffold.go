@@ -114,3 +114,61 @@ func (s *Scaffolder) createCommonFiles() error {
 	}
 	return nil
 }
+
+// GenerateComponent genera un componente específico (service, repository, handler)
+// en la ubicación correcta según la arquitectura.
+func (s *Scaffolder) GenerateComponent(compType, name string) error {
+	var targetPath string
+	var templatePath string
+
+	data := struct {
+		ui.ProjectConfig
+		EntityName string
+	}{
+		ProjectConfig: *s.config,
+		EntityName:    name,
+	}
+
+	switch compType {
+	case "service":
+		templatePath = "common/service.tmpl"
+		if s.config.Architecture == "Hexagonal" {
+			targetPath = filepath.Join("internal/domain", name+"_service.go")
+		} else {
+			targetPath = filepath.Join("internal/service", name+"_service.go")
+		}
+	case "repository":
+		templatePath = "common/repository.tmpl"
+		if s.config.Architecture == "Hexagonal" {
+			targetPath = filepath.Join("internal/ports", name+"_repository.go")
+		} else {
+			targetPath = filepath.Join("internal/repository", name+"_repository.go")
+		}
+	case "handler":
+		templatePath = "common/handler.tmpl"
+		if s.config.Architecture == "Hexagonal" {
+			targetPath = filepath.Join("internal/adapters", name+"_handler.go")
+		} else {
+			targetPath = filepath.Join("internal/handler", name+"_handler.go")
+		}
+	default:
+		return fmt.Errorf("tipo de componente no soportado: %s", compType)
+	}
+
+	fmt.Printf("🛠️  Generando %s en %s...\n", compType, targetPath)
+
+	// En generación, el ProjectName del config es el directorio raíz (que suele ser ".")
+	// o el nombre del proyecto original. Vamos a asumir que generamos en el directorio actual.
+	fullPath := targetPath
+	if err := os.MkdirAll(filepath.Dir(fullPath), 0755); err != nil {
+		return err
+	}
+
+	f, err := os.Create(fullPath)
+	if err != nil {
+		return err
+	}
+	defer f.Close()
+
+	return s.engine.Render(f, templatePath, data)
+}
