@@ -1,0 +1,27 @@
+package repository
+
+import (
+	"context"
+	"{{ .ModuleName }}/internal/domain"
+)
+
+type {{ .EntityName }}Repository interface {
+	Save(ctx context.Context, item interface{}) error
+	FindByID(ctx context.Context, id string) (interface{}, error)
+}
+
+type {{ .EntityName }}RepositoryImpl struct {
+	// db connection
+}
+
+func New{{ .EntityName }}Repository() {{ .EntityName }}Repository {
+	return &{{ .EntityName }}RepositoryImpl{}
+}
+
+func (r *{{ .EntityName }}RepositoryImpl) Save(ctx context.Context, item interface{}) error {
+	return nil
+}
+
+func (r *{{ .EntityName }}RepositoryImpl) FindByID(ctx context.Context, id string) (interface{}, error) {
+	return nil, nil
+}

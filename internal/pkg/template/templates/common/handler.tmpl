@@ -1,0 +1,18 @@
+package handler
+
+import (
+	"net/http"
+	"fmt"
+)
+
+type {{ .EntityName }}Handler struct {
+	// service
+}
+
+func New{{ .EntityName }}Handler() *{{ .EntityName }}Handler {
+	return &{{ .EntityName }}Handler{}
+}
+
+func (h *{{ .EntityName }}Handler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+	fmt.Fprintf(w, "Handler for {{ .EntityName }} is active!")
+}
