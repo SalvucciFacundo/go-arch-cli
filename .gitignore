@@ -1,0 +1,17 @@
+# Binaries
+go-arch
+go-arch.exe
+
+# Local Development
+.env
+.go-arch.yaml
+
+# System/Agent specific (Excluded as requested)
+skills/
+.gemini/
+.agent/
+
+# Go specific
+vendor/
+*.test
+*.out

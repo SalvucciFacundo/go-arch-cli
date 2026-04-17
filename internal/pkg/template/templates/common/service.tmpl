@@ -1,0 +1,20 @@
+package service
+
+import "context"
+
+type {{ .EntityName }}Service interface {
+	Execute(ctx context.Context) error
+}
+
+type {{ .EntityName }}ServiceImpl struct {
+	// dependencies
+}
+
+func New{{ .EntityName }}Service() {{ .EntityName }}Service {
+	return &{{ .EntityName }}ServiceImpl{}
+}
+
+func (s *{{ .EntityName }}ServiceImpl) Execute(ctx context.Context) error {
+	// business logic
+	return nil
+}
