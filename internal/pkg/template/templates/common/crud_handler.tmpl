@@ -12,14 +12,13 @@ type {{ .EntityName }}Handler struct {
 	}
 }
 
-// Routes boilerplate to copy-paste:
-/*
-   mux.HandleFunc("GET /{{ .EntityName | lower }}s", handler.List)
-   mux.HandleFunc("POST /{{ .EntityName | lower }}s", handler.Create)
-   mux.HandleFunc("GET /{{ .EntityName | lower }}s/{id}", handler.GetByID)
-   mux.HandleFunc("PUT /{{ .EntityName | lower }}s/{id}", handler.Update)
-   mux.HandleFunc("DELETE /{{ .EntityName | lower }}s/{id}", handler.Delete)
-*/
+func (h *{{ .EntityName }}Handler) Register(mux *http.ServeMux) {
+	mux.HandleFunc("GET /{{ .EntityName | lower }}s", h.List)
+	mux.HandleFunc("POST /{{ .EntityName | lower }}s", h.Create)
+	mux.HandleFunc("GET /{{ .EntityName | lower }}s/{id}", h.GetByID)
+	mux.HandleFunc("PUT /{{ .EntityName | lower }}s/{id}", h.Update)
+	mux.HandleFunc("DELETE /{{ .EntityName | lower }}s/{id}", h.Delete)
+}
 
 func New{{ .EntityName }}Handler() *{{ .EntityName }}Handler {
 	return &{{ .EntityName }}Handler{}

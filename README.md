@@ -6,6 +6,7 @@
   <img src="https://img.shields.io/github/v/release/SalvucciFacundo/go-arch-cli?style=for-the-badge&color=00ADD8" alt="Release">
   <img src="https://img.shields.io/github/license/SalvucciFacundo/go-arch-cli?style=for-the-badge&color=00ADD8" alt="License">
   <img src="https://img.shields.io/github/go-mod/go-version/SalvucciFacundo/go-arch-cli?style=for-the-badge&color=00ADD8" alt="Go Version">
+  <img src="https://img.shields.io/badge/OS-Linux%20|%20macOS%20|%20Windows-00ADD8?style=for-the-badge" alt="OS Support">
 </p>
 
 ---

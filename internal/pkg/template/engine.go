@@ -24,19 +24,21 @@ func NewEngine() *Engine {
 }
 
 func (e *Engine) Render(wr io.Writer, templatePath string, data interface{}) error {
-	funcMap := template.FuncMap{
+	// Cargamos la plantilla desde el FS embebido
+	t, err := template.New(filepath.Base(templatePath)).Funcs(e.getFuncMap()).ParseFS(e.fs, filepath.Join("templates", templatePath))
+	if err != nil {
+		return err
+	}
+
+	return t.Execute(wr, data)
+}
+
+func (e *Engine) getFuncMap() template.FuncMap {
+	return template.FuncMap{
 		"now": func() string {
 			return time.Now().Format("2006-01-02 15:04:05")
 		},
 		"lower": strings.ToLower,
 		"upper": strings.ToUpper,
 	}
-
-	// Cargamos la plantilla desde el FS embebido
-	t, err := template.New(filepath.Base(templatePath)).Funcs(funcMap).ParseFS(e.fs, filepath.Join("templates", templatePath))
-	if err != nil {
-		return err
-	}
-
-	return t.Execute(wr, data)
 }
