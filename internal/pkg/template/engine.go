@@ -2,7 +2,9 @@ package template
 
 import (
 	"embed"
+	"fmt"
 	"io"
+	"os"
 	"path/filepath"
 	"strings"
 	"text/template"
@@ -10,6 +12,7 @@ import (
 )
 
 // Templates es el FS embebido que contiene todas las plantillas.
+//
 //go:embed all:templates/*
 var TemplatesFS embed.FS
 
@@ -24,13 +27,40 @@ func NewEngine() *Engine {
 }
 
 func (e *Engine) Render(wr io.Writer, templatePath string, data interface{}) error {
-	// Cargamos la plantilla desde el FS embebido
-	t, err := template.New(filepath.Base(templatePath)).Funcs(e.getFuncMap()).ParseFS(e.fs, filepath.Join("templates", templatePath))
+	t, source, err := e.getTemplate(templatePath)
 	if err != nil {
 		return err
 	}
 
+	if source != "embedded" {
+		fmt.Printf("🎨 Usando plantilla personalizada (%s): %s\n", source, templatePath)
+	}
+
 	return t.Execute(wr, data)
+}
+
+func (e *Engine) getTemplate(templatePath string) (*template.Template, string, error) {
+	// 1. Local
+	localPath := filepath.Join(".go-arch", "templates", templatePath)
+	if _, err := os.Stat(localPath); err == nil {
+		t, err := template.New(filepath.Base(templatePath)).Funcs(e.getFuncMap()).ParseFiles(localPath)
+		return t, "local", err
+	}
+
+	// 2. Global
+	home, errHome := os.UserHomeDir()
+	if errHome == nil {
+		globalPath := filepath.Join(home, ".go-arch", "templates", templatePath)
+		if _, err := os.Stat(globalPath); err == nil {
+			t, err := template.New(filepath.Base(templatePath)).Funcs(e.getFuncMap()).ParseFiles(globalPath)
+			return t, "global", err
+		}
+	}
+
+	// 3. Embedded
+	embeddedPath := filepath.Join("templates", templatePath)
+	t, err := template.New(filepath.Base(templatePath)).Funcs(e.getFuncMap()).ParseFS(e.fs, embeddedPath)
+	return t, "embedded", err
 }
 
 func (e *Engine) getFuncMap() template.FuncMap {

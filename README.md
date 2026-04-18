@@ -21,9 +21,10 @@
 - 🔌 **Agnostic & Decoupled**: Data-driver independent (PostgreSQL, MySQL, MongoDB) and IDE-agnostic.
 - ⚡ **Built-in Hot-Reload**: Seamless integration with `Air` for a high-performance development loop.
 - 🛠️ **Component Generators**: Scaffold Services, Repositories, and Handlers mapped to your layout.
-- 🐚 **Container Ready**: Optional infrastructure with Docker and Docker Compose.
+- 🐚 **Infrastructure Ready**: Optional **Docker** & **Docker Compose** generation for the app and DB.
 - 🧪 **QA & TDD Oriented**: Automatic test file generation with manual mocking patterns.
-- 🧊 **Multi-Distro Support**: Native packages for **Arch Linux**, **Alpine**, **Debian**, and **Fedora**.
+- 🎨 **Deep Customization**: High-level template system (Global/Local) to override any generated code.
+- 🧊 **Multi-Platform**: Native packages for **Linux (Arch, Debian, Alpine, Fedora)**, **macOS**, and **Windows**.
 
 ## 🚀 Installation
 
@@ -75,6 +76,21 @@ go-arch generate crud Category # Complete CRUD implementation
 - **Minimalist**: Thin structure for microservices or single-file scripts.
 - **Standard**: Conventional Go layout for mid-sized projects and CLI tools.
 - **Hexagonal**: Domain-Centric design for enterprise-grade applications requiring high decoupling.
+
+## 🎨 Customization (External Templates)
+
+You can override any built-in template with your own. The CLI follows this lookup order:
+1. **Local**: `./.go-arch/templates/<path>`
+2. **Global**: `~/.go-arch/templates/<path>`
+3. **Embedded**: Built-in defaults.
+
+Check the [**Architecture Guide**](./docs/ARCHITECTURE.md) for detailed mapping and customization instructions.
+
+## 🐚 Infrastructure & Docker
+
+If **Docker Support** is enabled, the CLI generates:
+- **Dockerfile**: Optimized multi-stage build.
+- **docker-compose.yaml**: Application + Database orchestration.
 
 ## 📚 Resources
 

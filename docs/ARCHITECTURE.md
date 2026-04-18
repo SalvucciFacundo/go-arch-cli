@@ -1,29 +1,88 @@
-# Project Architecture: {{ .Architecture }} 🏛️
+# Project Architecture & Layouts 🏛️
 
-This document describes the architectural patterns and layout of the **{{ .ProjectName }}** project.
+This document provides a deep dive into the architectural principles and folder structures supported by **Go-Architect CLI**. It also explains how the internal "External Templates" engine works.
 
-## Project Structure Overview
+---
 
-Based on your selection, this project follows the **{{ .Architecture }}** pattern.
+## 📐 Supported Project Layouts
 
-{{ if eq .Architecture "Hexagonal" }}
-### ⬢ Hexagonal Architecture (Ports & Adapters)
-- **internal/domain/**: Contains business logic, entities, and services. It is the core of the application and has no dependencies on external layers.
-- **internal/ports/**: Defines interfaces (contracts) for external dependencies (repositories, external APIs).
-- **internal/adapters/**: Contains concrete implementations (SQL repositories, HTTP handlers).
-{{ else if eq .Architecture "Standard" }}
-### 📦 Standard Layout
-- **cmd/api/**: Entry point of the application.
-- **internal/handler/**: Request/Response handling.
-- **internal/service/**: Core business logic.
-- **internal/repository/**: Data access implementation.
-{{ else }}
-### ⚡ Minimalist Layout
-A flat and lean structure for microservices or single-file tools.
-{{ end }}
+The CLI standardizes projects into three distinct patterns, ranging from minimal logic to enterprise-grade decoupling.
 
-## Database
-- **Driver**: {{ .DBDriver }}
+### 1. Minimalist Layout ⚡
+Best for microservices, lambda functions, or single-source tools where over-engineering is a risk.
+- **Goal**: Speed and simplicity.
+- **Structure**:
+```mermaid
+graph TD
+    Root["Project Root /"]
+    Root --> main["main.go"]
+    Root --> mod["go.mod"]
+    Root --> env[".env"]
+    Root --> cfg[".go-arch.yaml"]
+```
 
-## Infrastructure
-- **Docker Support**: {{ if .UseDocker }}Enabled (Dockerfile & Compose generated){{ else }}Disabled{{ end }}
+### 2. Standard Layout 📦
+A conventional Go structure following common community practices (Package-oriented design).
+- **Goal**: Clarity and separation of concerns for mid-sized apps.
+- **Structure**:
+```mermaid
+graph TD
+    Root["/"]
+    Root --> cmd["cmd/api/main.go (Entry Point)"]
+    Root --> internal["internal/"]
+    internal --> handler["handler/ (HTTP Logic)"]
+    internal --> service["service/ (Business Logic)"]
+    internal --> repository["repository/ (Data Access)"]
+    internal --> model["model/ (Structs/Entities)"]
+```
+
+### 3. Hexagonal Architecture (Ports & Adapters) ⬢
+Our premium enterprise-grade layout. It isolates the domain logic from external concerns.
+- **Goal**: High testability and independence from frameworks/databases.
+- **Structure**:
+```mermaid
+graph TD
+    Root["/"]
+    Root --> cmd["cmd/api/main.go"]
+    Root --> internal["internal/"]
+    internal --> domain["domain/ (Entities & Services)"]
+    internal --> ports["ports/ (Interfaces/Contracts)"]
+    internal --> adapters["adapters/ (DB & HTTP Impl)"]
+```
+
+---
+
+## 🎨 Deep Customization (External Templates)
+
+One of the most powerful features of `go-arch` is the ability to **override the default code generation** without modifying the CLI binary.
+
+### How the "Lookup" Engine works
+When you run a command like `generate crud`, the CLI searches for templates in a hierarchical order of precedence:
+
+1.  **Local Project**: `.go-arch/templates/` inside your project.
+2.  **Global User**: `~/.go-arch/templates/` in your Home directory.
+3.  **Embedded**: Built-in defaults inside the binary.
+
+### Example: Customizing the Handler
+If you want all your project handlers to use a specific framework (e.g., Gin instead of net/http), you can create:
+`~/.go-arch/templates/common/handler.tmpl`
+
+The CLI will automatically detect it and use your version instead of the default one.
+
+---
+
+## 🐚 Infrastructure & Docker
+
+If **Docker Support** is enabled during the `new` command, the CLI generates:
+- **Dockerfile**: Multi-stage build for a minimal production image.
+- **docker-compose.yaml**: Orchestration for the app and the selected database.
+
+---
+
+## 🛠️ Internal CLI Architecture
+
+The CLI itself is built following the **Screaming Architecture** pattern:
+- **`internal/ui/`**: Cobra & Survey.v2 commands.
+- **`internal/pkg/template/`**: The "Lookup" Engine and embedded blueprints.
+- **`internal/pkg/scaffold/`**: The orchestrator that maps metadata to file creation.
+- **`internal/pkg/osutil/`**: OS-specific detection and utilities.

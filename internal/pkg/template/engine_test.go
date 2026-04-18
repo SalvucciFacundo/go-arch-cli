@@ -2,6 +2,9 @@ package template
 
 import (
 	"bytes"
+	"os"
+	"path/filepath"
+	"strings"
 	"testing"
 )
 
@@ -63,5 +66,38 @@ func TestEngine_FuncMap(t *testing.T) {
 				t.Errorf("%s(%q) = %q; want %q", tt.funcName, tt.input, got, tt.want)
 			}
 		})
+	}
+}
+
+func TestEngine_Lookup(t *testing.T) {
+	engine := NewEngine()
+
+	// Crear una carpeta temporal que simule el FS de plantillas externas
+	localTmplDir := filepath.Join(".go-arch", "templates", "common")
+	if err := os.MkdirAll(localTmplDir, 0755); err != nil {
+		t.Fatal(err)
+	}
+	defer os.RemoveAll(".go-arch")
+
+	tmplPath := filepath.Join(localTmplDir, "go.mod.tmpl")
+	content := "module {{ .ModuleName }}\n// CUSTOM TEMPLATE"
+	if err := os.WriteFile(tmplPath, []byte(content), 0644); err != nil {
+		t.Fatal(err)
+	}
+
+	data := struct {
+		ModuleName string
+	}{
+		ModuleName: "github.com/test/custom",
+	}
+
+	var buf bytes.Buffer
+	err := engine.Render(&buf, "common/go.mod.tmpl", data)
+	if err != nil {
+		t.Fatalf("Render failed: %v", err)
+	}
+
+	if !strings.Contains(buf.String(), "// CUSTOM TEMPLATE") {
+		t.Errorf("expected output to contain custom content, got %q", buf.String())
 	}
 }

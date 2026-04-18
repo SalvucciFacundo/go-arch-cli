@@ -1,89 +1,63 @@
 # Command Reference Guide 📖
 
-This document explains every available command in **Go-Architect CLI**, including usage examples and expected technical behavior.
+This guide provides a detailed technical explanation of every command available in **Go-Architect CLI**.
 
 ---
 
-## 1. `setup`
-**Purpose**: Prepares the local development environment.
-It detects the underlying Operating System (Linux, Windows, macOS) and suggests the correct installation steps for the Go toolchain and essential utilities like `air`.
+## 1. `setup` ✨
+**Usage**: `go-arch setup`
 
-### Example
-```bash
-go-arch setup
-```
-**Output**: 
-- OS Detection report.
-- Direct links to official installers.
-- One-click commands to install the `air` hot-reload engine.
+Prepares your environment. It is designed to be the first command a new Go developer runs.
+- **OS Detection**: Identifies if you are on Linux, macOS, or Windows.
+- **Toolchain**: Verifies if `go` is installed and available in the PATH.
+- **Utilities**: Suggests and assists with the installation of `Air` (Live Reloading).
 
 ---
 
-## 2. `new`
-**Purpose**: Bootstraps a brand-new project from scratch.
-It initiates an interactive terminal wizard (powered by `survey.v2`) to gather project metadata.
+## 2. `new` 🏗️
+**Usage**: `go-arch new [project-name]`
 
-### Syntax
-```bash
-go-arch new [project-name]
-```
-
+The main entry point for scaffolding. It triggers an interactive wizard.
 ### Options provided by the wizard:
 - **Module Name**: The Go namespace (e.g., `github.com/user/repo`).
-- **Architecture**: Choice between **Minimalist**, **Standard**, or **Hexagonal**.
+- **Architecture**: Choice between **Minimalist**, **Standard**, or **Hexagonal** (can be overridden via **External Templates**).
 - **DB Driver**: Pre-configures specific repository boilerplate (PostgreSQL, MySQL, MongoDB).
 - **Use Docker**: Optional generation of `Dockerfile` and `docker-compose.yaml`.
 
-### Result:
-A fully initialized project with a `.go-arch.yaml` manifest.
+---
+
+## 3. `generate` (or `g`) 🧬
+**Usage**: `go-arch generate [type] [Name]`
+
+Injects new components into an existing project. It is **Context-Aware**: it reads your `.go-arch.yaml` to know which folder structure to follow.
+
+### Component Types:
+- **`service`**: Creates the business logic layer.
+- **`repository`**: Creates the interface and the implementation (SQL/NoSQL).
+- **`handler`**: Creates the HTTP/API entry point.
+- **`crud`**: **Full Automation**.
+  - Generates Model, Service, Repository, and Handler.
+  - In a Hexagonal project, it correctly places items in `domain`, `ports`, and `adapters`.
+  - In a Standard project, it uses `model`, `service`, `repository`, and `handler`.
 
 ---
 
-## 3. `generate`
-**Purpose**: Scaffolds business components into an existing project.
-Matches the project's architecture (stored in metadata) to determine the target path.
+## 4. `serve` 🚀
+**Usage**: `go-arch serve`
 
-### Syntax
-```bash
-go-arch generate [component-type] [name]
-# Shorthand alias:
-go-arch g service Product
-```
-
-### Supported Components:
-- **`service`**: Business logic layer.
-- **`repository`**: Data access layer (generates both interface and implementation).
-- **`handler`**: Entry point layer (HTTP/gRPC/CLI handlers).
-- **`crud`**: **Full-stack entity generation**. Creates Model, Service, Repository, and Handler in a single pass.
-
-### Folder Mapping Logic:
-| Component Type | Standard Layout | Hexagonal Layout |
-|----------------|-----------------|------------------|
-| service        | `internal/service/` | `internal/domain/` |
-| repository     | `internal/repository/` | `internal/ports/` |
-| handler        | `internal/handler/` | `internal/adapters/` |
+Runs your application with a developer-first approach.
+- **Air Integration**: It looks for an `.air.toml` in the root. If found (and `air` is installed), it runs with **Hot-Reload**.
+- **Native Fallback**: If `air` is not available, it executes `go run main.go` or `go run cmd/api/main.go` depending on the layout.
 
 ---
 
-## 4. `serve`
-**Purpose**: Starts the application with a production-grade development loop.
+## 5. Metadata System (`.go-arch.yaml`) 📄
 
-### Behavior:
-1. **Air Detection**: If `air` is installed on the system, the CLI launches it automatically to provide **Hot-Reload**.
-2. **Fallback**: If `air` is missing, it falls back to `go run`, ensuring the project always runs.
+The CLI is stateless, meaning it doesn't store your project data in a database. Instead, it uses this YAML file as the **Source of Truth**.
+- **Architecture Locking**: Prevents generating components that don't match the project's initial architecture.
+- **Namespace Consistency**: Ensures all new files use the correct `module name` in their imports.
 
 ---
 
-## 5. Metadata Manifest (`.go-arch.yaml`)
-Every project includes this file. It allows the CLI to remain "stateless" but project-aware.
-
-### Sample Content:
-```yaml
-project_name: MyApp
-module_name: github.com/user/myapp
-architecture: Hexagonal
-db_driver: PostgreSQL
-use_docker: true
-generated_at: 2026-04-17
-```
-*Note: This file must remain in the project root for `generate` and `serve` to function correctly.*
+## 💡 Pro Tip: Customizing Output
+If you want to change how `generate` creates code, remember you can create your own templates in `.go-arch/templates/` (check `ARCHITECTURE.md` for details).
