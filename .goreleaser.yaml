@@ -36,11 +36,6 @@ nfpms:
   - id: default
     package_name: go-arch
     file_name_template: "{{ .ProjectName }}_{{ .Version }}_{{ .Os }}_{{ .Arch }}"
-    replacements:
-      amd64: 64-bit
-      arm64: ARM64
-      darwin: macOS
-      linux: linux
     formats:
       - deb
       - rpm
