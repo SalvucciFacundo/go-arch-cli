@@ -4,6 +4,7 @@ go 1.24.0
 
 require (
 	github.com/AlecAivazis/survey/v2 v2.3.7
+	github.com/jinzhu/inflection v1.0.0
 	github.com/spf13/cobra v1.8.1
 	github.com/spf13/viper v1.18.2
 )

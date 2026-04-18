@@ -53,6 +53,30 @@ func TestEngine_FuncMap(t *testing.T) {
 			input:    "world",
 			want:     "WORLD",
 		},
+		{
+			name:     "plural regular",
+			funcName: "plural",
+			input:    "User",
+			want:     "Users",
+		},
+		{
+			name:     "plural category",
+			funcName: "plural",
+			input:    "Category",
+			want:     "Categories",
+		},
+		{
+			name:     "plural address",
+			funcName: "plural",
+			input:    "Address",
+			want:     "Addresses",
+		},
+		{
+			name:     "plural person",
+			funcName: "plural",
+			input:    "Person",
+			want:     "People",
+		},
 	}
 
 	for _, tt := range tests {

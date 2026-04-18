@@ -63,6 +63,15 @@ When you run a command like `generate crud`, the CLI searches for templates in a
 2.  **Global User**: `~/.go-arch/templates/` in your Home directory.
 3.  **Embedded**: Built-in defaults inside the binary.
 
+### Available Template Helpers
+When creating custom templates, you can use these built-in functions to manipulate strings and data:
+- `now`: Returns current timestamp.
+- `lower`: Converts string to lowercase.
+- `upper`: Converts string to uppercase.
+- `plural`: **Smart pluralization** (e.g., `Category` -> `Categories`, `User` -> `Users`).
+
+**Usage**: `{{ .EntityName | lower | plural }}`
+
 ### Example: Customizing the Handler
 If you want all your project handlers to use a specific framework (e.g., Gin instead of net/http), you can create:
 `~/.go-arch/templates/common/handler.tmpl`

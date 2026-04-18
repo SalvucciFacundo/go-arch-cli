@@ -9,6 +9,8 @@ import (
 	"strings"
 	"text/template"
 	"time"
+
+	"github.com/jinzhu/inflection"
 )
 
 // Templates es el FS embebido que contiene todas las plantillas.
@@ -70,5 +72,6 @@ func (e *Engine) getFuncMap() template.FuncMap {
 		},
 		"lower": strings.ToLower,
 		"upper": strings.ToUpper,
+		"plural": inflection.Plural,
 	}
 }

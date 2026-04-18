@@ -13,11 +13,11 @@ type {{ .EntityName }}Handler struct {
 }
 
 func (h *{{ .EntityName }}Handler) Register(mux *http.ServeMux) {
-	mux.HandleFunc("GET /{{ .EntityName | lower }}s", h.List)
-	mux.HandleFunc("POST /{{ .EntityName | lower }}s", h.Create)
-	mux.HandleFunc("GET /{{ .EntityName | lower }}s/{id}", h.GetByID)
-	mux.HandleFunc("PUT /{{ .EntityName | lower }}s/{id}", h.Update)
-	mux.HandleFunc("DELETE /{{ .EntityName | lower }}s/{id}", h.Delete)
+	mux.HandleFunc("GET /{{ .EntityName | lower | plural }}", h.List)
+	mux.HandleFunc("POST /{{ .EntityName | lower | plural }}", h.Create)
+	mux.HandleFunc("GET /{{ .EntityName | lower | plural }}/{id}", h.GetByID)
+	mux.HandleFunc("PUT /{{ .EntityName | lower | plural }}/{id}", h.Update)
+	mux.HandleFunc("DELETE /{{ .EntityName | lower | plural }}/{id}", h.Delete)
 }
 
 func New{{ .EntityName }}Handler() *{{ .EntityName }}Handler {
@@ -26,7 +26,7 @@ func New{{ .EntityName }}Handler() *{{ .EntityName }}Handler {
 
 func (h *{{ .EntityName }}Handler) List(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(map[string]string{"message": "List of {{ .EntityName }}s"})
+	json.NewEncoder(w).Encode(map[string]string{"message": "List of {{ .EntityName | plural }}"})
 }
 
 func (h *{{ .EntityName }}Handler) Create(w http.ResponseWriter, r *http.Request) {
