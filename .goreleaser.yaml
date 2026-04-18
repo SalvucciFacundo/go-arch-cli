@@ -39,6 +39,8 @@ nfpms:
     formats:
       - deb
       - rpm
+      - apk
+      - archlinux
     contents:
       - src: ./docs/COMMANDS.md
         dst: /usr/share/doc/go-arch/COMMANDS.md
