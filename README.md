@@ -8,13 +8,22 @@
 - 🔌 **Agnostic & Decoupled**: Data-driver independent (PostgreSQL, MySQL, MongoDB, No-SQL) and IDE-agnostic.
 - ⚡ **Built-in Hot-Reload**: Seamless integration with `Air` for a high-performance development loop.
 - 🛠️ **Component Generators**: Scaffold Services, Repositories, and Handlers that automatically map to your chosen architecture.
+- 🐚 **Docker Support**: Optional containerization for every project (Dockerfile & Docker Compose).
 - 🧪 **QA & TDD Oriented**: Automatic test file generation with manual mocking patterns to foster high-quality codebases.
 - 💻 **Cross-Platform Compatibility**: Full support for Windows (ANSI-enabled), Linux, and macOS.
 
 ## 🚀 Installation
 
-Install the CLI globally using the Go toolchain:
+### 📦 Binary Downloads (Recommended)
+You can download the latest pre-compiled binaries for your OS from the [Releases](https://github.com/SalvucciFacundo/go-arch-cli/releases) page.
 
+### 🐧 Linux (Native Packages)
+- **Ubuntu/Debian**: `sudo dpkg -i go-arch_*.deb`
+- **Arch Linux**: The `PKGBUILD` is available in each release. You can install it using `makepkg -si`.
+- **Fedora/RHEL**: `sudo rpm -i go-arch_*.rpm`
+
+### 💻 Go Toolchain
+If you have Go installed, you can install the CLI globally:
 ```bash
 go install github.com/SalvucciFacundo/go-arch-cli@latest
 ```
@@ -44,6 +53,7 @@ Generates boilerplate code adhering to the project's metadata (detects layout an
 ```bash
 go-arch generate service Product
 go-arch generate repository User
+go-arch generate crud Category # NEW: Full CRUD generation
 ```
 
 ## 📐 Supported Architectures
