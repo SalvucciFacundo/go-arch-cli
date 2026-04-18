@@ -32,6 +32,7 @@ go-arch new [project-name]
 - **Module Name**: The Go namespace (e.g., `github.com/user/repo`).
 - **Architecture**: Choice between **Minimalist**, **Standard**, or **Hexagonal**.
 - **DB Driver**: Pre-configures specific repository boilerplate (PostgreSQL, MySQL, MongoDB).
+- **Use Docker**: Optional generation of `Dockerfile` and `docker-compose.yaml`.
 
 ### Result:
 A fully initialized project with a `.go-arch.yaml` manifest.
@@ -53,6 +54,7 @@ go-arch g service Product
 - **`service`**: Business logic layer.
 - **`repository`**: Data access layer (generates both interface and implementation).
 - **`handler`**: Entry point layer (HTTP/gRPC/CLI handlers).
+- **`crud`**: **Full-stack entity generation**. Creates Model, Service, Repository, and Handler in a single pass.
 
 ### Folder Mapping Logic:
 | Component Type | Standard Layout | Hexagonal Layout |
@@ -81,6 +83,7 @@ project_name: MyApp
 module_name: github.com/user/myapp
 architecture: Hexagonal
 db_driver: PostgreSQL
+use_docker: true
 generated_at: 2026-04-17
 ```
 *Note: This file must remain in the project root for `generate` and `serve` to function correctly.*
