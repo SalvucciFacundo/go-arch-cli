@@ -38,7 +38,12 @@ Download the latest pre-compiled binaries from the [Releases](https://github.com
 | **Fedora/RHEL** | `sudo rpm -i go-arch_*.rpm` |
 | **Alpine** | `apk add --allow-untrusted go-arch_*.apk` |
 
-### 🛠️ Manual Build
+### 🍏 macOS / 🪟 Windows
+1. Download the latest version from [Releases](https://github.com/SalvucciFacundo/go-arch-cli/releases).
+2. **macOS**: Move the binary to `/usr/local/bin/go-arch`.
+3. **Windows**: Add the folder containing `go-arch.exe` to your system `PATH`.
+
+### 🛠️ Manual Build (Any OS)
 ```bash
 go install github.com/SalvucciFacundo/go-arch-cli@latest
 ```
