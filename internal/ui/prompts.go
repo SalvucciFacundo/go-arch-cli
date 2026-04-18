@@ -2,42 +2,41 @@ package ui
 
 import (
 	"fmt"
+
 	"github.com/AlecAivazis/survey/v2"
 )
 
 type ProjectConfig struct {
-	ProjectName  string
-	ModuleName   string
-	Architecture string
-	DBDriver     string
-	UseDocker    bool
+	ProjectName  string `mapstructure:"project_name"`
+	ModuleName   string `mapstructure:"module_name"`
+	Architecture string `mapstructure:"architecture"`
+	DBDriver     string `mapstructure:"db_driver"`
+	UseDocker    bool   `mapstructure:"use_docker"`
 }
 
-// AskProjectConfig lanza el wizard interactivo para configurar el nuevo proyecto.
-func AskProjectConfig(defaultName string) (*ProjectConfig, error) {
-	var config ProjectConfig
-
-	questions := []*survey.Question{
+func RunWizard() (*ProjectConfig, error) {
+	fmt.Println("🚀 Bienvenido al asistente de Go-Arch")
+	
+	var qs = []*survey.Question{
 		{
 			Name: "ProjectName",
 			Prompt: &survey.Input{
-				Message: "Nombre del Proyecto:",
-				Default: defaultName,
+				Message: "Nombre del proyecto:",
+				Default: "my-go-app",
 			},
 			Validate: survey.Required,
 		},
 		{
 			Name: "ModuleName",
 			Prompt: &survey.Input{
-				Message: "Nombre del Módulo Go (ej: github.com/user/repo):",
-				Default: fmt.Sprintf("github.com/user/%s", defaultName),
+				Message: "Nombre del módulo (Go Module):",
+				Default: "github.com/user/app",
 			},
-			Validate: survey.Required,
 		},
 		{
 			Name: "Architecture",
 			Prompt: &survey.Select{
-				Message: "Elegí la Arquitectura:",
+				Message: "Selecciona la arquitectura:",
 				Options: []string{"Minimalist", "Standard", "Hexagonal"},
 				Default: "Standard",
 			},
@@ -45,7 +44,7 @@ func AskProjectConfig(defaultName string) (*ProjectConfig, error) {
 		{
 			Name: "DBDriver",
 			Prompt: &survey.Select{
-				Message: "Driver de Base de Datos:",
+				Message: "Selecciona el driver de base de datos:",
 				Options: []string{"PostgreSQL", "MySQL", "MongoDB", "None"},
 				Default: "None",
 			},
@@ -53,16 +52,17 @@ func AskProjectConfig(defaultName string) (*ProjectConfig, error) {
 		{
 			Name: "UseDocker",
 			Prompt: &survey.Confirm{
-				Message: "¿Querés agregar soporte para Docker (Dockerfile y Docker Compose)?",
-				Default: false,
+				Message: "¿Deseas incluir configuración de Docker?",
+				Default: true,
 			},
 		},
 	}
 
-	err := survey.Ask(questions, &config)
+	config := &ProjectConfig{}
+	err := survey.Ask(qs, config)
 	if err != nil {
 		return nil, err
 	}
 
-	return &config, nil
+	return config, nil
 }

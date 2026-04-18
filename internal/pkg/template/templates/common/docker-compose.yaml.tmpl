@@ -1,0 +1,34 @@
+services:
+  api:
+    build: .
+    ports:
+      - "8080:8080"
+    env_file:
+      - .env
+    volumes:
+      - .:/app
+{{ if ne .DBDriver "None" }}
+  db:
+  {{ if eq .DBDriver "PostgreSQL" }}
+    image: postgres:15-alpine
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: {{ .ProjectName | lower }}
+  {{ else if eq .DBDriver "MySQL" }}
+    image: mysql:8
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: {{ .ProjectName | lower }}
+  {{ else if eq .DBDriver "MongoDB" }}
+    image: mongo:6
+  {{ end }}
+    ports:
+    {{ if eq .DBDriver "PostgreSQL" }}
+      - "5432:5432"
+    {{ else if eq .DBDriver "MySQL" }}
+      - "3306:3306"
+    {{ else if eq .DBDriver "MongoDB" }}
+      - "27017:27017"
+    {{ end }}
+{{ end }}
