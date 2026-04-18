@@ -1,0 +1,48 @@
+package {{ if eq .Architecture "Hexagonal" }}adapters{{ else }}handler{{ end }}
+
+import (
+	"encoding/json"
+	"net/http"
+	"strconv"
+)
+
+type {{ .EntityName }}Handler struct {
+	service interface {
+		List(http.ResponseWriter, *http.Request) // Just a placeholder for the logic
+	}
+}
+
+// Routes boilerplate to copy-paste:
+/*
+   mux.HandleFunc("GET /{{ .EntityName | lower }}s", handler.List)
+   mux.HandleFunc("POST /{{ .EntityName | lower }}s", handler.Create)
+   mux.HandleFunc("GET /{{ .EntityName | lower }}s/{id}", handler.GetByID)
+   mux.HandleFunc("PUT /{{ .EntityName | lower }}s/{id}", handler.Update)
+   mux.HandleFunc("DELETE /{{ .EntityName | lower }}s/{id}", handler.Delete)
+*/
+
+func New{{ .EntityName }}Handler() *{{ .EntityName }}Handler {
+	return &{{ .EntityName }}Handler{}
+}
+
+func (h *{{ .EntityName }}Handler) List(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(map[string]string{"message": "List of {{ .EntityName }}s"})
+}
+
+func (h *{{ .EntityName }}Handler) Create(w http.ResponseWriter, r *http.Request) {
+	w.WriteHeader(http.StatusCreated)
+	json.NewEncoder(w).Encode(map[string]string{"message": "{{ .EntityName }} created"})
+}
+
+func (h *{{ .EntityName }}Handler) GetByID(w http.ResponseWriter, r *http.Request) {
+	json.NewEncoder(w).Encode(map[string]string{"message": "Get {{ .EntityName }}"})
+}
+
+func (h *{{ .EntityName }}Handler) Update(w http.ResponseWriter, r *http.Request) {
+	json.NewEncoder(w).Encode(map[string]string{"message": "{{ .EntityName }} updated"})
+}
+
+func (h *{{ .EntityName }}Handler) Delete(w http.ResponseWriter, r *http.Request) {
+	w.WriteHeader(http.StatusNoContent)
+}

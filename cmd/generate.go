@@ -2,6 +2,8 @@ package cmd
 
 import (
 	"fmt"
+	"go-arch/internal/pkg/scaffold"
+	"go-arch/internal/ui"
 	"os"
 
 	"github.com/spf13/cobra"
@@ -20,7 +22,7 @@ var generateCmd = &cobra.Command{
 	Aliases: []string{"g"},
 	Run: func(cmd *cobra.Command, args []string) {
 		compType := args[0]
-		compName := args[1]
+		name := args[1]
 
 		// Cargar configuración del proyecto local
 		if err := viper.ReadInConfig(); err != nil {
@@ -28,9 +30,28 @@ var generateCmd = &cobra.Command{
 			os.Exit(1)
 		}
 
-		fmt.Printf("🛠️ Generando %s: %s...\n", compType, compName)
-		
-		// TODO: Implementar lógica de inyección de componentes
-		fmt.Println("✅ Componente generado (simulado).")
+		// Mapear configuración de Viper a struct
+		config := &ui.ProjectConfig{
+			ProjectName:  viper.GetString("project_name"),
+			ModuleName:   viper.GetString("module_name"),
+			Architecture: viper.GetString("architecture"),
+			DBDriver:     viper.GetString("db_driver"),
+			UseDocker:    viper.GetBool("use_docker"),
+		}
+
+		scaffolder := scaffold.NewScaffolder(config)
+		var err error
+		if compType == "crud" {
+			err = scaffolder.GenerateCRUD(name)
+		} else {
+			err = scaffolder.GenerateComponent(compType, name)
+		}
+
+		if err != nil {
+			fmt.Printf("❌ Error: %v\n", err)
+			os.Exit(1)
+		}
+
+		fmt.Println("✅ Componente generado correctamente.")
 	},
 }

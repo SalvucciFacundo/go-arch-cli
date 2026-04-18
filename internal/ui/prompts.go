@@ -10,6 +10,7 @@ type ProjectConfig struct {
 	ModuleName   string
 	Architecture string
 	DBDriver     string
+	UseDocker    bool
 }
 
 // AskProjectConfig lanza el wizard interactivo para configurar el nuevo proyecto.
@@ -47,6 +48,13 @@ func AskProjectConfig(defaultName string) (*ProjectConfig, error) {
 				Message: "Driver de Base de Datos:",
 				Options: []string{"PostgreSQL", "MySQL", "MongoDB", "None"},
 				Default: "None",
+			},
+		},
+		{
+			Name: "UseDocker",
+			Prompt: &survey.Confirm{
+				Message: "¿Querés agregar soporte para Docker (Dockerfile y Docker Compose)?",
+				Default: false,
 			},
 		},
 	}

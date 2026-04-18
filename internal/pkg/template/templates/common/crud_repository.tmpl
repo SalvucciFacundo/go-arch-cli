@@ -1,0 +1,40 @@
+package {{ if eq .Architecture "Hexagonal" }}adapters{{ else }}repository{{ end }}
+
+import (
+	"context"
+	"fmt"
+	// "database/sql" // Uncomment for SQL drivers
+)
+
+type {{ .EntityName }}Repository struct {
+	// db *sql.DB 
+}
+
+func New{{ .EntityName }}Repository() *{{ .EntityName }}Repository {
+	return &{{ .EntityName }}Repository{}
+}
+
+func (r *{{ .EntityName }}Repository) Create(ctx context.Context, item *{{ .EntityName }}) error {
+	fmt.Printf("Saving {{ .EntityName }} to {{ .DBDriver }} database...\n")
+	return nil
+}
+
+func (r *{{ .EntityName }}Repository) GetByID(ctx context.Context, id uint) (*{{ .EntityName }}, error) {
+	fmt.Printf("Fetching {{ .EntityName }} %d from {{ .DBDriver }}...\n", id)
+	return nil, nil
+}
+
+func (r *{{ .EntityName }}Repository) List(ctx context.Context) ([]*{{ .EntityName }}, error) {
+	fmt.Printf("Listing all {{ .EntityName }}s from {{ .DBDriver }}...\n")
+	return nil, nil
+}
+
+func (r *{{ .EntityName }}Repository) Update(ctx context.Context, item *{{ .EntityName }}) error {
+	fmt.Printf("Updating {{ .EntityName }} in {{ .DBDriver }}...\n")
+	return nil
+}
+
+func (r *{{ .EntityName }}Repository) Delete(ctx context.Context, id uint) error {
+	fmt.Printf("Deleting {{ .EntityName }} %d from {{ .DBDriver }}...\n", id)
+	return nil
+}

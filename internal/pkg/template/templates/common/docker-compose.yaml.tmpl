@@ -1,0 +1,71 @@
+version: '3.8'
+
+services:
+  app:
+    build: .
+    ports:
+      - "8080:8080"
+    env_file:
+      - .env
+    depends_on:
+      {{- if eq .DBDriver "PostgreSQL" }}
+      - db
+      {{- end }}
+      {{- if eq .DBDriver "MySQL" }}
+      - db
+      {{- end }}
+      {{- if eq .DBDriver "MongoDB" }}
+      - db
+      {{- end }}
+
+  {{- if eq .DBDriver "PostgreSQL" }}
+  db:
+    image: postgres:15-alpine
+    environment:
+      POSTGRES_USER: ${DB_USER:-postgres}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-postgres}
+      POSTGRES_DB: ${DB_NAME:-myapp}
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+  {{- end }}
+
+  {{- if eq .DBDriver "MySQL" }}
+  db:
+    image: mysql:8.0
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD:-root}
+      MYSQL_DATABASE: ${DB_NAME:-myapp}
+      MYSQL_USER: ${DB_USER:-user}
+      MYSQL_PASSWORD: ${DB_PASSWORD:-pass}
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+  {{- end }}
+
+  {{- if eq .DBDriver "MongoDB" }}
+  db:
+    image: mongo:latest
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${DB_USER:-admin}
+      MONGO_INITDB_ROOT_PASSWORD: ${DB_PASSWORD:-admin}
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+  {{- end }}
+
+{{- if ne .DBDriver "None" }}
+volumes:
+  {{- if eq .DBDriver "PostgreSQL" }}
+  postgres_data:
+  {{- end }}
+  {{- if eq .DBDriver "MySQL" }}
+  mysql_data:
+  {{- end }}
+  {{- if eq .DBDriver "MongoDB" }}
+  mongo_data:
+  {{- end }}
+{{- end }}

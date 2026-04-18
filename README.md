@@ -1,58 +1,80 @@
 # Go-Architect CLI (go-arch) 🚀
 
-**Go-Architect CLI** es una herramienta de scaffolding profesional, agnóstica y multiplataforma diseñada para estandarizar la creación de proyectos en Go. Inspirada en la eficiencia del Angular CLI, permite generar arquitecturas limpias y mantenibles en segundos.
+**Go-Architect CLI** is a professional, agnostic, and multi-platform scaffolding tool designed to standardize Go project initialization. Inspired by the performance and modularity of the Angular CLI, it empowers developers to bootstrap production-ready applications with clean architecture patterns in seconds.
 
-## ✨ Características Principales
+## ✨ Key Features
 
-- 🏗️ **Arquitecturas Soportadas**: Minimalista, Standard y Hexagonal (Ports & Adapters).
-- 🔌 **Agnosticismo Total**: Independiente de la base de datos (PostgreSQL, MySQL, MongoDB) y del IDE.
-- ⚡ **Hot-Reload**: Integración nativa con `Air` para un ciclo de desarrollo ultra rápido.
-- 🛠️ **Generadores de Componentes**: Crea servicios, repositorios y handlers con un solo comando.
-- 🧪 **QA Ready**: Generación automática de tests y mocks manuales para fomentar TDD.
-- 💻 **Multiplataforma**: Soporte total para Windows (ANSI), Linux y macOS.
+- 🏗️ **Architecture Layouts**: Native support for **Minimalist**, **Standard**, and **Hexagonal** (Ports & Adapters) architectures.
+- 🔌 **Agnostic & Decoupled**: Data-driver independent (PostgreSQL, MySQL, MongoDB, No-SQL) and IDE-agnostic.
+- ⚡ **Built-in Hot-Reload**: Seamless integration with `Air` for a high-performance development loop.
+- 🛠️ **Component Generators**: Scaffold Services, Repositories, and Handlers that automatically map to your chosen architecture.
+- 🧪 **QA & TDD Oriented**: Automatic test file generation with manual mocking patterns to foster high-quality codebases.
+- 💻 **Cross-Platform Compatibility**: Full support for Windows (ANSI-enabled), Linux, and macOS.
 
-## 🚀 Instalación
+## 🚀 Installation
 
+### 📦 Binary Downloads (Recommended)
+You can download the latest pre-compiled binaries for your OS from the [Releases](https://github.com/SalvucciFacundo/go-arch-cli/releases) page.
+
+### 🐧 Linux (Native Packages)
+- **Ubuntu/Debian**: `sudo dpkg -i go-arch_*.deb`
+- **Arch Linux**: The `PKGBUILD` is available in each release. You can install it using `makepkg -si`.
+- **Fedora/RHEL**: `sudo rpm -i go-arch_*.rpm`
+
+### 💻 Go Toolchain
+If you have Go installed, you can install the CLI globally:
 ```bash
-go install github.com/tu-usuario/go-arch@latest
+go install github.com/SalvucciFacundo/go-arch-cli@latest
 ```
 
-## 🛠️ Comandos Rápidos
+## 🛠️ Usage Guide
 
-### 1. Configurar Entorno
-Detecta tu sistema operativo e instala Go y las dependencias necesarias.
+### 1. Environment Setup
+Detects your Operating System and guides you through installing the Go toolchain and essential development tools.
 ```bash
 go-arch setup
 ```
 
-### 2. Crear un Nuevo Proyecto
-Asistente interactivo para configurar nombre, arquitectura y base de datos.
+### 2. Scaffold a New Project
+Launches an interactive wizard to configure specific project requirements like Module Name, Layout, and Database Drivers.
 ```bash
-go-arch new mi-proyecto
+go-arch new my-project
 ```
 
-### 3. Ejecutar con Hot-Reload
-Lanza el servidor de desarrollo.
+### 3. Development Server
+Runs the application with optimized settings. Automatically detects `Air` for hot-reload capabilities.
 ```bash
 go-arch serve
 ```
 
-### 4. Generar Componentes
-Genera piezas de código que se ubican automáticamente según la arquitectura del proyecto.
+### 4. Component Generation
+Generates boilerplate code adhering to the project's metadata (detects layout and module namespace).
 ```bash
 go-arch generate service Product
-go-arch generate handler Product
+go-arch generate repository User
 ```
 
-## 📐 Arquitecturas Disponibles
+## 📐 Supported Architectures
 
-- **Minimalist**: Para microservicios o scripts de un solo archivo.
-- **Standard**: Estructura clásica de Go para proyectos medianos.
-- **Hexagonal**: El estándar de oro para aplicaciones empresariales desacopladas del mundo exterior.
+- **Minimalist**: Thin structure for microservices, lambda functions, or single-file scripts.
+- **Standard**: Conventional Go layout for mid-sized projects and CLI tools.
+- **Hexagonal**: Domain-Centric design for enterprise-grade applications requiring high decoupling from external infrastructure.
 
-## 🤝 Contribuciones
+## 📚 Documentation
 
-¡Las PR son bienvenidas! Si tenés sugerencias para nuevas plantillas o drivers de base de datos, no dudes en abrir un issue.
+For deep technical insights and usage guides, please refer to:
+- [**Architecture Guide**](./docs/ARCHITECTURE.md): Detailed explanation oflayouts and internal design patterns.
+- [**Command Reference**](./docs/COMMANDS.md): Comprehensive guide on how to use every CLI command with examples.
+
+## 🤝 Contributing
+
+Contributions are what make the open-source community an amazing place to learn, inspire, and create. Any contributions you make are **greatly appreciated**.
+
+1. Fork the Project
+2. Create your Feature Branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your Changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the Branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
 
 ---
-Desarrollado con ❤️ para la comunidad de Go.
+Built with ❤️ for the Go Community.

@@ -1,0 +1,47 @@
+package {{ if eq .Architecture "Hexagonal" }}domain{{ else }}service{{ end }}
+
+import (
+	"context"
+	"errors"
+)
+
+// {{ .EntityName }}Repository defines the persistence contract.
+type {{ .EntityName }}Repository interface {
+	Create(ctx context.Context, item *{{ .EntityName }}) error
+	GetByID(ctx context.Context, id uint) (*{{ .EntityName }}, error)
+	List(ctx context.Context) ([]*{{ .EntityName }}, error)
+	Update(ctx context.Context, item *{{ .EntityName }}) error
+	Delete(ctx context.Context, id uint) error
+}
+
+// {{ .EntityName }}Service handles the business logic for {{ .EntityName }}.
+type {{ .EntityName }}Service struct {
+	repo {{ .EntityName }}Repository
+}
+
+func New{{ .EntityName }}Service(repo {{ .EntityName }}Repository) *{{ .EntityName }}Service {
+	return &{{ .EntityName }}Service{repo: repo}
+}
+
+func (s *{{ .EntityName }}Service) Create(ctx context.Context, item *{{ .EntityName }}) error {
+	if item.Name == "" {
+		return errors.New("name is required")
+	}
+	return s.repo.Create(ctx, item)
+}
+
+func (s *{{ .EntityName }}Service) GetByID(ctx context.Context, id uint) (*{{ .EntityName }}, error) {
+	return s.repo.GetByID(ctx, id)
+}
+
+func (s *{{ .EntityName }}Service) List(ctx context.Context) ([]*{{ .EntityName }}, error) {
+	return s.repo.List(ctx)
+}
+
+func (s *{{ .EntityName }}Service) Update(ctx context.Context, item *{{ .EntityName }}) error {
+	return s.repo.Update(ctx, item)
+}
+
+func (s *{{ .EntityName }}Service) Delete(ctx context.Context, id uint) error {
+	return s.repo.Delete(ctx, id)
+}

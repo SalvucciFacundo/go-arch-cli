@@ -4,7 +4,9 @@ import (
 	"embed"
 	"io"
 	"path/filepath"
+	"strings"
 	"text/template"
+	"time"
 )
 
 // Templates es el FS embebido que contiene todas las plantillas.
@@ -24,8 +26,10 @@ func NewEngine() *Engine {
 func (e *Engine) Render(wr io.Writer, templatePath string, data interface{}) error {
 	funcMap := template.FuncMap{
 		"now": func() string {
-			return "2026-04-17" // Placeholder or real time
+			return time.Now().Format("2006-01-02 15:04:05")
 		},
+		"lower": strings.ToLower,
+		"upper": strings.ToUpper,
 	}
 
 	// Cargamos la plantilla desde el FS embebido
