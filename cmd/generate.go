@@ -22,7 +22,7 @@ var generateCmd = &cobra.Command{
 	Aliases: []string{"g"},
 	Run: func(cmd *cobra.Command, args []string) {
 		compType := args[0]
-		compName := args[1]
+		name := args[1]
 
 		// Cargar configuración del proyecto local
 		if err := viper.ReadInConfig(); err != nil {
@@ -36,10 +36,18 @@ var generateCmd = &cobra.Command{
 			ModuleName:   viper.GetString("module_name"),
 			Architecture: viper.GetString("architecture"),
 			DBDriver:     viper.GetString("db_driver"),
+			UseDocker:    viper.GetBool("use_docker"),
 		}
 
 		scaffolder := scaffold.NewScaffolder(config)
-		if err := scaffolder.GenerateComponent(compType, compName); err != nil {
+		var err error
+		if compType == "crud" {
+			err = scaffolder.GenerateCRUD(name)
+		} else {
+			err = scaffolder.GenerateComponent(compType, name)
+		}
+
+		if err != nil {
 			fmt.Printf("❌ Error: %v\n", err)
 			os.Exit(1)
 		}
