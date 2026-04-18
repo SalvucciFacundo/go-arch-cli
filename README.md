@@ -24,6 +24,8 @@
 - 🐚 **Infrastructure Ready**: Optional **Docker** & **Docker Compose** generation for the app and DB.
 - 🧪 **QA & TDD Oriented**: Automatic test file generation with manual mocking patterns.
 - 🎨 **Deep Customization**: High-level template system (Global/Local) to override any generated code.
+- 🧠 **Smart Pluralization**: Linguistically aware generation (e.g., `Category` -> `Categories`).
+- 🛡️ **Living Architecture**: Built-in validation to ensure project integrity over time.
 - 🧊 **Multi-Platform**: Native packages for **Linux (Arch, Debian, Alpine, Fedora)**, **macOS**, and **Windows**.
 
 ## 🚀 Installation
@@ -63,7 +65,13 @@ Runs the application. Automatically detects `Air` for hot-reload capabilities.
 go-arch serve
 ```
 
-### 3. Smart Generators
+### 3. Architecture Health Check
+Validates that the project structure and imports follow the selected layout rules.
+```bash
+go-arch check
+```
+
+### 4. Smart Generators
 Generates patterns based on your project metadata (detects layout and namespace).
 ```bash
 go-arch generate service Product

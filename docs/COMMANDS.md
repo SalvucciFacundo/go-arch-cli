@@ -51,7 +51,17 @@ Runs your application with a developer-first approach.
 
 ---
 
-## 5. Metadata System (`.go-arch.yaml`) 📄
+## 5. `check` 🛡️
+**Usage**: `go-arch check`
+
+Validates the project's **Architectural Health**. This command is intended to be used during development and in **CI/CD pipelines**.
+- **Structural Integrity**: Checks if the required folders for your selected architecture exist.
+- **Dependency Guard (Layer Leaking)**: Scans Go imports to ensure layers are correctly decoupled (e.g., Domain must not import Adapters).
+- **Exit Codes**: Returns `1` if violations are found, making it compatible with automation tools.
+
+---
+
+## 6. Metadata System (`.go-arch.yaml`) 📄
 
 The CLI is stateless, meaning it doesn't store your project data in a database. Instead, it uses this YAML file as the **Source of Truth**.
 - **Architecture Locking**: Prevents generating components that don't match the project's initial architecture.

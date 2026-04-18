@@ -80,6 +80,19 @@ The CLI will automatically detect it and use your version instead of the default
 
 ---
 
+## 🛡️ Living Architecture (Validation Rules)
+The `go-arch check` command enforces strict dependency rules to prevent architectural decay.
+
+### Hexagonal Rules ⬢
+- **Domain (Core)**: MUST NOT import anything from `internal/ports` or `internal/adapters`. The business logic must be pure and independent.
+- **Ports (Contracts)**: MUST NOT import `internal/adapters`. Interfaces should not depend on their implementations.
+
+### Standard Rules 📦
+- **Model**: Must be self-contained; no imports from other `internal/` packages are allowed.
+- **Repository**: MUST NOT import `service` or `handler` to avoid circular dependencies and ensure a one-way data flow.
+
+---
+
 ## 🐚 Infrastructure & Docker
 
 If **Docker Support** is enabled during the `new` command, the CLI generates:
