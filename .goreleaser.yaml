@@ -18,11 +18,12 @@ builds:
     goarch:
       - amd64
       - arm64
-    main: ./cmd/api/main.go
+    main: ./main.go
     binary: go-arch
 
 archives:
   - format: tar.gz
+    # use zip for windows archives
     format_overrides:
       - goos: windows
         format: zip
@@ -54,7 +55,7 @@ aurs:
     maintainers:
       - "SalvucciFacundo <facundo@example.com>"
     license: "MIT"
-    skip_upload: true
+    skip_upload: true # Generamos el PKGBUILD pero no intentamos subirlo al AUR sin SSH keys
     package: |-
       install -Dm755 "./go-arch" "${pkgdir}/usr/bin/go-arch"
       install -Dm644 "./README.md" "${pkgdir}/usr/share/doc/go-arch/README.md"
