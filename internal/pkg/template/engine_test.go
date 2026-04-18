@@ -36,11 +36,13 @@ func TestEngine_Render(t *testing.T) {
 			ModuleName   string
 			Architecture string
 			DBDriver     string
+			UseDocker    bool
 		}{
 			ProjectName:  "TestProject",
 			ModuleName:   "github.com/test/repo",
 			Architecture: "Standard",
 			DBDriver:     "PostgreSQL",
+			UseDocker:    true,
 		}
 
 		// Usamos el config.tmpl para probar la función 'now'

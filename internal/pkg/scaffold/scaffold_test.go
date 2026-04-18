@@ -72,3 +72,38 @@ func TestScaffolder_GenerateComponent(t *testing.T) {
 		t.Errorf("expected file %s to exist", expectedFile)
 	}
 }
+
+func TestScaffolder_WithDocker(t *testing.T) {
+	tempDir, err := os.MkdirTemp("", "docker-test")
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer os.RemoveAll(tempDir)
+
+	config := &ui.ProjectConfig{
+		ProjectName:  filepath.Join(tempDir, "DockerApp"),
+		ModuleName:   "github.com/test/docker",
+		Architecture: "Standard",
+		DBDriver:     "PostgreSQL",
+		UseDocker:    true,
+	}
+
+	scaffolder := NewScaffolder(config)
+	err = scaffolder.Execute()
+	if err != nil {
+		t.Fatalf("Execute failed: %v", err)
+	}
+
+	// Verificar archivos de Docker
+	dockerFiles := []string{
+		filepath.Join(config.ProjectName, "Dockerfile"),
+		filepath.Join(config.ProjectName, "docker-compose.yaml"),
+		filepath.Join(config.ProjectName, ".env"),
+	}
+
+	for _, f := range dockerFiles {
+		if _, err := os.Stat(f); os.IsNotExist(err) {
+			t.Errorf("expected docker file %s to exist", f)
+		}
+	}
+}

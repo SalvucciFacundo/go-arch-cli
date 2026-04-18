@@ -105,13 +105,29 @@ func (s *Scaffolder) scaffoldHexagonal() error {
 }
 
 func (s *Scaffolder) createCommonFiles() error {
-	// go.mod, .env.example, .go-arch.yaml
+	// go.mod, .go-arch.yaml
 	if err := s.createFile("go.mod", "common/go.mod.tmpl"); err != nil {
 		return err
 	}
 	if err := s.createFile(".go-arch.yaml", "common/config.tmpl"); err != nil {
 		return err
 	}
+
+	// .env (Siempre útil)
+	if err := s.createFile(".env", "common/env.tmpl"); err != nil {
+		return err
+	}
+
+	// Docker Files (Opcionales)
+	if s.config.UseDocker {
+		if err := s.createFile("Dockerfile", "common/Dockerfile.tmpl"); err != nil {
+			return err
+		}
+		if err := s.createFile("docker-compose.yaml", "common/docker-compose.yaml.tmpl"); err != nil {
+			return err
+		}
+	}
+
 	return nil
 }
 
