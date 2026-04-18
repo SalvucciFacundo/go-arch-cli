@@ -19,10 +19,8 @@ var newCmd = &cobra.Command{
 	Long:  `The 'new' command initializes a new Go project with the specified name and architecture.`,
 	Args:  cobra.MinimumNArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
-		projectName := args[0]
-
 		// 1. Lanzar el asistente interactivo
-		config, err := ui.AskProjectConfig(projectName)
+		config, err := ui.RunWizard()
 		if err != nil {
 			fmt.Printf("❌ Error en el asistente: %v\n", err)
 			os.Exit(1)
