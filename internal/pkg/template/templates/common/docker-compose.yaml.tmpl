@@ -32,3 +32,17 @@ services:
       - "27017:27017"
     {{ end }}
 {{ end }}
+{{ if .UseObservability }}
+{{ if eq .ObservabilityBackend "Jaeger" }}
+  jaeger:
+    image: jaegertracing/all-in-one:latest
+    ports:
+      - "16686:16686" # UI
+      - "4318:4318"  # OTLP HTTP
+{{ else if eq .ObservabilityBackend "Zipkin" }}
+  zipkin:
+    image: openzipkin/zipkin
+    ports:
+      - "9411:9411"
+{{ end }}
+{{ end }}

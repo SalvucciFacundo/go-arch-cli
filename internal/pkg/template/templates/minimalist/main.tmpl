@@ -1,7 +1,23 @@
 package main
 
-import "fmt"
+import (
+	"context"
+	"fmt"
+	"log"
+	{{ if .UseObservability }}
+	"{{ .ModuleName }}/internal/telemetry"
+	{{ end }}
+)
 
 func main() {
 	fmt.Println("Hello from a Minimalist Go-Arch project!")
+
+	{{ if .UseObservability }}
+	// Initialize Telemetry
+	shutdown, err := telemetry.InitTracer("{{ .ProjectName }}", "{{ .ObservabilityBackend }}")
+	if err != nil {
+		log.Fatalf("failed to initialize telemetry: %v", err)
+	}
+	defer shutdown(context.Background())
+	{{ end }}
 }

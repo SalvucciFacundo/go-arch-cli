@@ -7,17 +7,21 @@ import (
 )
 
 type ProjectConfig struct {
-	ProjectName  string `mapstructure:"project_name"`
-	ModuleName   string `mapstructure:"module_name"`
-	Architecture string `mapstructure:"architecture"`
-	DBDriver     string `mapstructure:"db_driver"`
-	UseDocker    bool   `mapstructure:"use_docker"`
+	ProjectName          string `mapstructure:"project_name"`
+	ModuleName           string `mapstructure:"module_name"`
+	Architecture         string `mapstructure:"architecture"`
+	DBDriver             string `mapstructure:"db_driver"`
+	UseDocker            bool   `mapstructure:"use_docker"`
+	UseObservability     bool   `mapstructure:"use_observability"`
+	ObservabilityBackend string `mapstructure:"observability_backend"`
 }
 
 func RunWizard() (*ProjectConfig, error) {
 	fmt.Println("🚀 Bienvenido al asistente de Go-Arch")
 	
-	var qs = []*survey.Question{
+	config := &ProjectConfig{}
+
+	var mainQs = []*survey.Question{
 		{
 			Name: "ProjectName",
 			Prompt: &survey.Input{
@@ -56,12 +60,30 @@ func RunWizard() (*ProjectConfig, error) {
 				Default: true,
 			},
 		},
+		{
+			Name: "UseObservability",
+			Prompt: &survey.Confirm{
+				Message: "¿Deseas habilitar Telemetría/Observabilidad (OpenTelemetry)?",
+				Default: false,
+			},
+		},
 	}
 
-	config := &ProjectConfig{}
-	err := survey.Ask(qs, config)
+	err := survey.Ask(mainQs, config)
 	if err != nil {
 		return nil, err
+	}
+
+	if config.UseObservability {
+		var obsQ = &survey.Select{
+			Message: "Selecciona la herramienta de visualización:",
+			Options: []string{"Console", "Jaeger", "Zipkin", "Prometheus", "SigNoz"},
+			Default: "Console",
+		}
+		err = survey.AskOne(obsQ, &config.ObservabilityBackend)
+		if err != nil {
+			return nil, err
+		}
 	}
 
 	return config, nil

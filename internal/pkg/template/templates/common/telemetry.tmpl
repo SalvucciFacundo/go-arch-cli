@@ -1,0 +1,65 @@
+package telemetry
+
+import (
+	"context"
+	"fmt"
+	"log"
+	"time"
+
+	"go.opentelemetry.io/otel"
+	"go.opentelemetry.io/otel/exporters/otlp/otlptrace/otlptracehttp"
+	"go.opentelemetry.io/otel/exporters/stdout/stdouttrace"
+	"go.opentelemetry.io/otel/exporters/zipkin"
+	"go.opentelemetry.io/otel/propagation"
+	"go.opentelemetry.io/otel/sdk/resource"
+	sdktrace "go.opentelemetry.io/otel/sdk/trace"
+	semconv "go.opentelemetry.io/otel/semconv/v1.24.0"
+)
+
+// InitTracer configura e inicializa el exportador de telemetría seleccionado.
+func InitTracer(serviceName string, backend string) (func(context.Context) error, error) {
+	ctx := context.Background()
+
+	var exporter sdktrace.SpanExporter
+	var err error
+
+	switch backend {
+	case "Jaeger", "SigNoz":
+		// Jaeger y SigNoz aceptan OTLP sobre HTTP por defecto
+		// Para Jaeger: http://localhost:4318/v1/traces
+		// Para SigNoz: http://localhost:4318/v1/traces
+		exporter, err = otlptracehttp.New(ctx, 
+			otlptracehttp.WithInsecure(),
+			otlptracehttp.WithEndpoint("localhost:4318"),
+		)
+	case "Zipkin":
+		exporter, err = zipkin.New("http://localhost:9411/api/v2/spans")
+	case "Console":
+		exporter, err = stdouttrace.New(stdouttrace.WithPrettyPrint())
+	default:
+		exporter, err = stdouttrace.New()
+	}
+
+	if err != nil {
+		return nil, fmt.Errorf("failed to create exporter: %w", err)
+	}
+
+	res, err := resource.New(ctx,
+		resource.WithAttributes(
+			semconv.ServiceNameKey.String(serviceName),
+			semconv.ServiceVersionKey.String("1.0.0"),
+		),
+	)
+	if err != nil {
+		return nil, fmt.Errorf("failed to create resource: %w", err)
+	}
+
+	tp := sdktrace.NewTracerProvider(
+		sdktrace.WithBatcher(exporter),
+		sdktrace.WithResource(res),
+	)
+	otel.SetTracerProvider(tp)
+	otel.SetTextMapPropagator(propagation.NewCompositeTextMapPropagator(propagation.TraceContext{}, propagation.Baggage{}))
+
+	return tp.Shutdown, nil
+}

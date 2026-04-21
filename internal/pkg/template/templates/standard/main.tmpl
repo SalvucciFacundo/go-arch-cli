@@ -1,11 +1,26 @@
 package main
 
 import (
+	"context"
 	"fmt"
+	"log"
 	"{{ .ModuleName }}/internal/handler"
+	{{ if .UseObservability }}
+	"{{ .ModuleName }}/internal/telemetry"
+	{{ end }}
 )
 
 func main() {
 	fmt.Println("Starting Standard project: {{ .ProjectName }}")
+
+	{{ if .UseObservability }}
+	// Initialize Telemetry
+	shutdown, err := telemetry.InitTracer("{{ .ProjectName }}", "{{ .ObservabilityBackend }}")
+	if err != nil {
+		log.Fatalf("failed to initialize telemetry: %v", err)
+	}
+	defer shutdown(context.Background())
+	{{ end }}
+	
 	// Handler logic here
 }

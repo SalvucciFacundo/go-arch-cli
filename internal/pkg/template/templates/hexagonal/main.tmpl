@@ -1,12 +1,27 @@
 package main
 
 import (
+	"context"
 	"fmt"
+	"log"
 	"{{ .ModuleName }}/internal/adapters"
 	"{{ .ModuleName }}/internal/domain"
+	{{ if .UseObservability }}
+	"{{ .ModuleName }}/internal/telemetry"
+	{{ end }}
 )
 
 func main() {
 	fmt.Println("🚀 Hexagonal Architecture project '{{ .ProjectName }}' initialized!")
+	
+	{{ if .UseObservability }}
+	// Initialize Telemetry
+	shutdown, err := telemetry.InitTracer("{{ .ProjectName }}", "{{ .ObservabilityBackend }}")
+	if err != nil {
+		log.Fatalf("failed to initialize telemetry: %v", err)
+	}
+	defer shutdown(context.Background())
+	{{ end }}
+
 	// Wire up ports and adapters
 }

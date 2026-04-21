@@ -132,6 +132,16 @@ func (s *Scaffolder) createCommonFiles() error {
 		}
 	}
 
+	// Observabilidad (Opcional)
+	if s.config.UseObservability {
+		if err := s.createFile("internal/telemetry/telemetry.go", "common/telemetry.tmpl", nil); err != nil {
+			return err
+		}
+		if err := s.createFile("internal/telemetry/middleware.go", "common/telemetry_middleware.tmpl", nil); err != nil {
+			return err
+		}
+	}
+
 	return nil
 }
 

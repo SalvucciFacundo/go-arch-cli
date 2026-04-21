@@ -1,0 +1,32 @@
+package telemetry
+
+import (
+	"net/http"
+
+	"go.opentelemetry.io/otel"
+	"go.opentelemetry.io/otel/attribute"
+	"go.opentelemetry.io/otel/propagation"
+	"go.opentelemetry.io/otel/trace"
+)
+
+const tracerName = "http-server"
+
+// Middleware envuelve un http.Handler con tracing de OpenTelemetry.
+func Middleware(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		ctx := otel.GetTextMapPropagator().Extract(r.Context(), propagation.HeaderCarrier(r.Header()))
+		
+		tr := otel.Tracer(tracerName)
+		ctx, span := tr.Start(ctx, r.URL.Path, 
+			trace.WithAttributes(
+				attribute.String("http.method", r.Method),
+				attribute.String("http.url", r.URL.String()),
+			),
+			trace.WithSpanKind(trace.SpanKindServer),
+		)
+		defer span.End()
+
+		// Pasar el contexto con el span al siguiente handler
+		next.ServeHTTP(w, r.WithContext(ctx))
+	})
+}
