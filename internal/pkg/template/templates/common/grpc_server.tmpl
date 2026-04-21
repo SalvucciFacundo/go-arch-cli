@@ -1,0 +1,55 @@
+package grpc
+
+import (
+	"context"
+	"fmt"
+	"net"
+
+	"{{ .ModuleName }}/internal/adapters/grpc/proto"
+	"google.golang.org/grpc"
+	{{ if .UseObservability }}
+	"go.opentelemetry.io/contrib/instrumentation/google.golang.org/grpc/otelgrpc"
+	{{ end }}
+)
+
+type Server struct {
+	proto.Unimplemented{{ .ProjectName | title }}ServiceServer
+	grpcServer *grpc.Server
+}
+
+func NewServer() *Server {
+	opts := []grpc.ServerOption{}
+	
+	{{ if .UseObservability }}
+	// Integrar interceptores de OpenTelemetry
+	opts = append(opts, grpc.StatsHandler(otelgrpc.NewServerHandler()))
+	{{ end }}
+
+	return &Server{
+		grpcServer: grpc.NewServer(opts...),
+	}
+}
+
+func (s *Server) Start(port int) error {
+	lis, err := net.Listen("tcp", fmt.Sprintf(":%d", port))
+	if err != nil {
+		return fmt.Errorf("failed to listen: %v", err)
+	}
+
+	proto.Register{{ .ProjectName | title }}ServiceServer(s.grpcServer, s)
+
+	fmt.Printf("📡 gRPC Server listening on port %d\n", port)
+	return s.grpcServer.Serve(lis)
+}
+
+func (s *Server) Stop() {
+	s.grpcServer.GracefulStop()
+}
+
+// HealthCheck implementación del contrato proto
+func (s *Server) HealthCheck(ctx context.Context, req *proto.HealthRequest) (*proto.HealthResponse, error) {
+	return &proto.HealthResponse{
+		Status:  "UP",
+		Message: fmt.Sprintf("Service %s is healthy", req.ServiceName),
+	}, nil
+}

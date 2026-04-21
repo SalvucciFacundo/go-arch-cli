@@ -142,6 +142,19 @@ func (s *Scaffolder) createCommonFiles() error {
 		}
 	}
 
+	// gRPC / Microservicios (Opcional)
+	if s.config.UseGRPC {
+		if err := s.createFile("api/proto/service.proto", "common/service.proto.tmpl", nil); err != nil {
+			return err
+		}
+		if err := s.createFile("internal/adapters/grpc/server.go", "common/grpc_server.tmpl", nil); err != nil {
+			return err
+		}
+		if err := s.createFile("Makefile", "common/Makefile.tmpl", nil); err != nil {
+			return err
+		}
+	}
+
 	return nil
 }
 

@@ -1,0 +1,20 @@
+syntax = "proto3";
+
+package {{ .ProjectName | lower }};
+
+option go_package = "{{ .ModuleName }}/internal/adapters/grpc/proto";
+
+// {{ .ProjectName | title }}Service define el contrato principal del microservicio.
+service {{ .ProjectName | title }}Service {
+  // HealthCheck verifica la salud del servicio.
+  rpc HealthCheck(HealthRequest) returns (HealthResponse);
+}
+
+message HealthRequest {
+  string service_name = 1;
+}
+
+message HealthResponse {
+  string status = 1;
+  string message = 2;
+}

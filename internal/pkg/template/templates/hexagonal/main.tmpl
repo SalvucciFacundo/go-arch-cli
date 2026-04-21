@@ -9,6 +9,9 @@ import (
 	{{ if .UseObservability }}
 	"{{ .ModuleName }}/internal/telemetry"
 	{{ end }}
+	{{ if .UseGRPC }}
+	grpc_server "{{ .ModuleName }}/internal/adapters/grpc"
+	{{ end }}
 )
 
 func main() {
@@ -23,5 +26,19 @@ func main() {
 	defer shutdown(context.Background())
 	{{ end }}
 
+	{{ if .UseGRPC }}
+	// Initialize gRPC Server in a goroutine
+	go func() {
+		gs := grpc_server.NewServer()
+		if err := gs.Start(50051); err != nil {
+			log.Fatalf("failed to start gRPC server: %v", err)
+		}
+	}()
+	{{ end }}
+
 	// Wire up ports and adapters
+	// Keep the main process alive
+	{{ if .UseGRPC }}
+	select {}
+	{{ end }}
 }

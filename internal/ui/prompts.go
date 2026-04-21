@@ -14,6 +14,7 @@ type ProjectConfig struct {
 	UseDocker            bool   `mapstructure:"use_docker"`
 	UseObservability     bool   `mapstructure:"use_observability"`
 	ObservabilityBackend string `mapstructure:"observability_backend"`
+	UseGRPC              bool   `mapstructure:"use_grpc"`
 }
 
 func RunWizard() (*ProjectConfig, error) {
@@ -64,6 +65,13 @@ func RunWizard() (*ProjectConfig, error) {
 			Name: "UseObservability",
 			Prompt: &survey.Confirm{
 				Message: "¿Deseas habilitar Telemetría/Observabilidad (OpenTelemetry)?",
+				Default: false,
+			},
+		},
+		{
+			Name: "UseGRPC",
+			Prompt: &survey.Confirm{
+				Message: "¿Deseas habilitar un servidor gRPC para Microservicios?",
 				Default: false,
 			},
 		},

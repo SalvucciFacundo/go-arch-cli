@@ -12,11 +12,15 @@ func TestEngine_Render(t *testing.T) {
 	engine := NewEngine()
 
 	data := struct {
-		ProjectName string
-		ModuleName  string
+		ProjectName      string
+		ModuleName       string
+		UseObservability bool
+		UseGRPC          bool
 	}{
-		ProjectName: "TestApp",
-		ModuleName:  "github.com/test/app",
+		ProjectName:      "TestApp",
+		ModuleName:       "github.com/test/app",
+		UseObservability: true,
+		UseGRPC:          true,
 	}
 
 	var buf bytes.Buffer
@@ -77,6 +81,18 @@ func TestEngine_FuncMap(t *testing.T) {
 			input:    "Person",
 			want:     "People",
 		},
+		{
+			name:     "title function",
+			funcName: "title",
+			input:    "product",
+			want:     "Product",
+		},
+		{
+			name:     "title empty",
+			funcName: "title",
+			input:    "",
+			want:     "",
+		},
 	}
 
 	for _, tt := range tests {
@@ -110,9 +126,13 @@ func TestEngine_Lookup(t *testing.T) {
 	}
 
 	data := struct {
-		ModuleName string
+		ModuleName       string
+		UseObservability bool
+		UseGRPC          bool
 	}{
-		ModuleName: "github.com/test/custom",
+		ModuleName:       "github.com/test/custom",
+		UseObservability: false,
+		UseGRPC:          false,
 	}
 
 	var buf bytes.Buffer

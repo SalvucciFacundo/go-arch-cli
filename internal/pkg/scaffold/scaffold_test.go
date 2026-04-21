@@ -9,9 +9,11 @@ import (
 
 func TestScaffolder_Layouts(t *testing.T) {
 	tests := []struct {
-		name         string
-		architecture string
-		expectFiles  []string
+		name             string
+		architecture     string
+		expectFiles      []string
+		useGRPC          bool
+		useObservability bool
 	}{
 		{
 			name:         "Minimalist Architecture",
@@ -28,6 +30,19 @@ func TestScaffolder_Layouts(t *testing.T) {
 			architecture: "Hexagonal",
 			expectFiles:  []string{"cmd/api/main.go", "internal/domain", "internal/ports", "internal/adapters", "go.mod"},
 		},
+		{
+			name:         "Microservices & Observability",
+			architecture: "Hexagonal",
+			expectFiles: []string{
+				"api/proto/service.proto",
+				"internal/adapters/grpc/server.go",
+				"internal/telemetry/telemetry.go",
+				"Makefile",
+				"go.mod",
+			},
+			useGRPC:         true,
+			useObservability: true,
+		},
 	}
 
 	for _, tt := range tests {
@@ -43,9 +58,11 @@ func TestScaffolder_Layouts(t *testing.T) {
 			defer os.Chdir(oldWd)
 
 			config := &ui.ProjectConfig{
-				ProjectName:  "TestApp",
-				ModuleName:   "github.com/test/app",
-				Architecture: tt.architecture,
+				ProjectName:      "TestApp",
+				ModuleName:       "github.com/test/app",
+				Architecture:     tt.architecture,
+				UseGRPC:          tt.useGRPC,
+				UseObservability: tt.useObservability,
 			}
 
 			scaffolder := NewScaffolder(config)
