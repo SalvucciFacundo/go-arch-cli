@@ -26,6 +26,7 @@
 - 🎨 **Deep Customization**: High-level template system (Global/Local) to override any generated code.
 - 🧠 **Smart Pluralization**: Linguistically aware generation (e.g., `Category` -> `Categories`).
 - 🛡️ **Living Architecture**: Built-in validation to ensure project integrity over time.
+- 🔭 **Multi-Backend Observability**: Built-in OpenTelemetry support for **Jaeger**, **Zipkin**, **Prometheus**, and **SigNoz**.
 - 🧊 **Multi-Platform**: Native packages for **Linux (Arch, Debian, Alpine, Fedora)**, **macOS**, and **Windows**.
 
 ## 🚀 Installation
@@ -98,7 +99,7 @@ Check the [**Architecture Guide**](./docs/ARCHITECTURE.md) for detailed mapping 
 
 If **Docker Support** is enabled, the CLI generates:
 - **Dockerfile**: Optimized multi-stage build.
-- **docker-compose.yaml**: Application + Database orchestration.
+- **docker-compose.yaml**: Application + Database + **Observability Backend** (Jaeger, Zipkin, etc.) orchestration.
 
 ## 📚 Resources
 

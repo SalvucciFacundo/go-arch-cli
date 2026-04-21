@@ -93,6 +93,16 @@ The `go-arch check` command enforces strict dependency rules to prevent architec
 
 ---
 
+## 🔭 Observability & Telemetry
+In 2026, observability is a first-class citizen. `go-arch` implements **OpenTelemetry (OTel)** by default when enabled.
+
+### Implementation Pattern
+- **SDK Initialization**: Located in `internal/telemetry/telemetry.go`. It sets up the TracerProvider and Propagators.
+- **Agnostic Exporting**: The CLI uses the **OTLP (OpenTelemetry Line Protocol)** over HTTP. This means the Go code is decoupled from the backend; you can switch from Jaeger to SigNoz just by changing the endpoint.
+- **Auto-Tracing Middleware**: A pre-configured HTTP middleware (`internal/telemetry/middleware.go`) traces every incoming request, capturing path, method, and duration automatically.
+
+---
+
 ## 🐚 Infrastructure & Docker
 
 If **Docker Support** is enabled during the `new` command, the CLI generates:

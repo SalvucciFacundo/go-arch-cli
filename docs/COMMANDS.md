@@ -23,6 +23,7 @@ The main entry point for scaffolding. It triggers an interactive wizard.
 - **Architecture**: Choice between **Minimalist**, **Standard**, or **Hexagonal** (can be overridden via **External Templates**).
 - **DB Driver**: Pre-configures specific repository boilerplate (PostgreSQL, MySQL, MongoDB).
 - **Use Docker**: Optional generation of `Dockerfile` and `docker-compose.yaml`.
+- **Telemetry**: Optional integration of **OpenTelemetry** with support for multiple backends (Jaeger, Zipkin, SigNoz, etc.).
 
 ---
 
