@@ -103,6 +103,16 @@ In 2026, observability is a first-class citizen. `go-arch` implements **OpenTele
 
 ---
 
+## 🛰️ Microservices & gRPC
+For high-performance inter-service communication, `go-arch` follows the **Contract-First** approach.
+
+### Implementation Pattern
+- **Protobuf Contracts**: All services are defined in `api/proto/service.proto`.
+- **Dual-Stack Server**: The generated `main.go` initializes both HTTP and gRPC servers. This allows services to expose a REST API for clients and a gRPC API for internal communication.
+- **Automated Tooling**: A **Makefile** is provided to handle the complexity of `protoc` compilation. Running `make proto` will automatically generate the Go bindings in `internal/adapters/grpc/proto`.
+
+---
+
 ## 🐚 Infrastructure & Docker
 
 If **Docker Support** is enabled during the `new` command, the CLI generates:

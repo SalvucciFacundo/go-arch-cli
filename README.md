@@ -27,6 +27,7 @@
 - 🧠 **Smart Pluralization**: Linguistically aware generation (e.g., `Category` -> `Categories`).
 - 🛡️ **Living Architecture**: Built-in validation to ensure project integrity over time.
 - 🔭 **Multi-Backend Observability**: Built-in OpenTelemetry support for **Jaeger**, **Zipkin**, **Prometheus**, and **SigNoz**.
+- 🛰️ **Microservices Ready**: Native **gRPC & Protocol Buffers** integration with automated code generation.
 - 🧊 **Multi-Platform**: Native packages for **Linux (Arch, Debian, Alpine, Fedora)**, **macOS**, and **Windows**.
 
 ## 🚀 Installation
@@ -100,6 +101,7 @@ Check the [**Architecture Guide**](./docs/ARCHITECTURE.md) for detailed mapping 
 If **Docker Support** is enabled, the CLI generates:
 - **Dockerfile**: Optimized multi-stage build.
 - **docker-compose.yaml**: Application + Database + **Observability Backend** (Jaeger, Zipkin, etc.) orchestration.
+- **Makefile**: Automation for gRPC code generation (`make proto`) and environment setup.
 
 ## 📚 Resources
 

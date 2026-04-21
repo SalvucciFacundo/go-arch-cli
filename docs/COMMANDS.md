@@ -24,6 +24,7 @@ The main entry point for scaffolding. It triggers an interactive wizard.
 - **DB Driver**: Pre-configures specific repository boilerplate (PostgreSQL, MySQL, MongoDB).
 - **Use Docker**: Optional generation of `Dockerfile` and `docker-compose.yaml`.
 - **Telemetry**: Optional integration of **OpenTelemetry** with support for multiple backends (Jaeger, Zipkin, SigNoz, etc.).
+- **gRPC Support**: Scaffolds a complete **gRPC server** including `.proto` contracts and automation through a **Makefile**.
 
 ---
 
