@@ -2,8 +2,10 @@ package cmd
 
 import (
 	"fmt"
+	"go-arch/internal/ui"
 	"os"
 
+	"github.com/samber/oops"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 )
@@ -11,21 +13,29 @@ import (
 var cfgFile string
 
 var RootCmd = &cobra.Command{
-	Use:   "go-arch",
-	Short: "A CLI tool to scaffold Go projects with clean architecture",
-	Long:  `go-arch is a CLI library for Go that empowers developers to create projects with hexagonal or minimalist architecture.`,
+	Use:           "go-arch",
+	Short:         "A CLI tool to scaffold Go projects with clean architecture",
+	Long:          `go-arch is a CLI library for Go that empowers developers to create projects with hexagonal or minimalist architecture.`,
+	SilenceUsage:  true,  // Samber Standard: We handle error display
+	SilenceErrors: true, // Samber Standard: Avoid duplicate error logs
 }
 
 func Execute() {
 	if err := RootCmd.Execute(); err != nil {
-		fmt.Println(err)
-		os.Exit(1)
+		// Wrap error with context and report through UI
+		ui.Fatal(oops.
+			Code("root_execution_failed").
+			Hint("Check your flags or config file").
+			Wrapf(err, "Error al ejecutar el comando principal"))
 	}
 }
 
 func init() {
 	cobra.OnInitialize(initConfig)
 	RootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.go-arch.yaml)")
+
+	// Bind persistent flags to viper
+	viper.BindPFlag("config", RootCmd.PersistentFlags().Lookup("config"))
 }
 
 func initConfig() {
@@ -34,8 +44,9 @@ func initConfig() {
 	} else {
 		home, err := os.UserHomeDir()
 		if err != nil {
-			fmt.Println(err)
-			os.Exit(1)
+			ui.Fatal(oops.
+				Code("home_dir_failed").
+				Wrapf(err, "No se pudo encontrar el directorio personal del usuario"))
 		}
 		viper.AddConfigPath(home)
 		viper.AddConfigPath(".")
@@ -45,6 +56,6 @@ func initConfig() {
 	viper.AutomaticEnv()
 
 	if err := viper.ReadInConfig(); err == nil {
-		fmt.Println("Using config file:", viper.ConfigFileUsed())
+		ui.Success(fmt.Sprintf("Using config file: %s", viper.ConfigFileUsed()))
 	}
 }

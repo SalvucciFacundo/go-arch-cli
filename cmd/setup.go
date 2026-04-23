@@ -2,9 +2,10 @@ package cmd
 
 import (
 	"fmt"
-	"os"
+	"go-arch/internal/ui"
 	"runtime"
 
+	"github.com/samber/oops"
 	"github.com/spf13/cobra"
 )
 
@@ -16,8 +17,8 @@ var setupCmd = &cobra.Command{
 	Use:   "setup",
 	Short: "Setup Go environment",
 	Long:  `The 'setup' command detects your OS and installs Go and necessary tools like 'air'.`,
-	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Printf("🔍 Detectando entorno para %s/%s...\n", runtime.GOOS, runtime.GOARCH)
+	RunE: func(cmd *cobra.Command, args []string) error {
+		ui.Info(fmt.Sprintf("Detectando entorno para %s/%s...", runtime.GOOS, runtime.GOARCH))
 
 		switch runtime.GOOS {
 		case "linux":
@@ -25,26 +26,31 @@ var setupCmd = &cobra.Command{
 		case "windows":
 			setupWindows()
 		default:
-			fmt.Printf("❌ Sistema operativo %s no soportado automáticamente aún.\n", runtime.GOOS)
-			os.Exit(1)
+			return oops.
+				Code("os_not_supported").
+				With("os", runtime.GOOS).
+				Errorf("Sistema operativo no soportado automáticamente aún")
 		}
+
+		ui.Success("Proceso de setup finalizado. Revisa las instrucciones arriba para completar la instalación.")
+		return nil
 	},
 }
 
 func setupLinux() {
-	fmt.Println("🐧 Entorno Linux detectado.")
+	ui.Info("🐧 Entorno Linux detectado.")
 	fmt.Println("1. Descargando instalador oficial de go.dev...")
 	// TODO: Implementar descarga real con net/http
-	fmt.Println("2. Para instalar, ejecutá: sudo tar -C /usr/local -xzf go1.23.linux-amd64.tar.gz")
+	fmt.Println("2. Para instalar, ejecutá: sudo tar -C /usr/local -xzf go1.24.linux-amd64.tar.gz")
 	fmt.Println("3. Instalando Air para hot-reload...")
-	fmt.Println("👉 Ejecutá: go install github.com/air-verse/air@latest")
+	fmt.Printf("👉 %s go install github.com/air-verse/air@latest\n", ui.InfoMsg("Ejecutá:"))
 }
 
 func setupWindows() {
-	fmt.Println("🪟 Entorno Windows detectado.")
+	ui.Info("🪟 Entorno Windows detectado.")
 	fmt.Println("1. Descargando MSI oficial de go.dev...")
 	// TODO: Implementar descarga real
 	fmt.Println("2. Ejecutando instalador...")
 	fmt.Println("3. Instalando Air para hot-reload...")
-	fmt.Println("👉 Ejecutá: go install github.com/air-verse/air@latest")
+	fmt.Printf("👉 %s go install github.com/air-verse/air@latest\n", ui.InfoMsg("Ejecutá:"))
 }

@@ -1,17 +1,35 @@
 # Binaries
 go-arch
 go-arch.exe
+/bin/
 
 # Local Development
 .env
 .go-arch.yaml
+*.log
 
-# System/Agent specific (Excluded as requested)
-skills/
+# System / OS
+.DS_Store
+Thumbs.db
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Agent Specific
 .gemini/
 .agent/
+.atl/
+.brain/
+
+# Dependencies & Skills
+# (We exclude skills directory if it's just for local agent use)
+skills/
+vendor/
 
 # Go specific
-vendor/
 *.test
 *.out
+coverage.txt

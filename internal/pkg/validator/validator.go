@@ -9,6 +9,8 @@ import (
 	"os"
 	"path/filepath"
 	"strings"
+
+	"github.com/samber/oops"
 )
 
 // Violation representa una infracción a las reglas arquitectónicas.
@@ -37,7 +39,9 @@ func (v *Validator) Validate() ([]Violation, error) {
 	// 2. Validar reglas de imports (Dependency Rule)
 	dependencyViolations, err := v.checkDependencies()
 	if err != nil {
-		return nil, fmt.Errorf("error analizando dependencias: %v", err)
+		return nil, oops.
+			Code("validator_io_error").
+			Wrapf(err, "Error analizando dependencias del proyecto")
 	}
 	violations = append(violations, dependencyViolations...)
 
